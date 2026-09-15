@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ZenPulse</string>
+
+    <!--
+      Alert copy. Written to describe the body, never to diagnose the person: "your body looks
+      activated", not "you are stressed". The user may be anxious, and a notification that
+      announces a problem can hand them something new to worry about.
+    -->
+    <string name="notification_channel_name">Gentle nudges</string>
+    <string name="notification_channel_description">An occasional tap when your body looks activated</string>
+    <string name="notification_title_elevated">Your body looks activated</string>
+    <string name="notification_title_high">Feeling tense?</string>
+    <string name="notification_body">A minute of breathing might help. Tap to start.</string>
+
+    <!-- Ongoing foreground-service notification: a disclosure that monitoring is running. -->
+    <string name="monitoring_channel_name">Monitoring</string>
+    <string name="monitoring_channel_description">Shows while ZenPulse is watching for activation</string>
+    <string name="monitoring_notification_title">ZenPulse is on</string>
+    <string name="monitoring_notification_text">Watching quietly in the background</string>
+
+    <string name="action_stop">Stop</string>
 </resources>

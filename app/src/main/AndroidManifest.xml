@@ -2,23 +2,36 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Real-time heart rate / IBI / accelerometer via Health Services -->
+    <!--
+      No INTERNET permission, deliberately. Health data stays on the watch and on the paired
+      phone; the app has no way to upload it even if a future change tried to.
+    -->
+
+    <!-- Real-time heart rate via Health Services -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <!-- Needed later for passive/background measurement (Week 6). Declared now. -->
+    <!-- Passive (background) heart rate, which keeps the personal baseline fresh -->
     <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
+    <!-- Delivering the gentle nudge -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Keeping active monitoring alive while the display is off -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Haptics for the alert and the breathing pacer -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
-        android:allowBackup="true"
+        android:name=".ZenPulseApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault"
         tools:targetApi="30">
 
-        <!-- Tells Wear OS this app requires Health Services to be present -->
+        <!-- Tells Wear OS this app uses Health Services -->
         <uses-library
             android:name="androidx.health.services.client"
             android:required="false" />
@@ -33,5 +46,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--
+          Keeps active monitoring running with the screen off. The "health" foreground-service
+          type is required from Android 14; older platforms ignore the unknown flag.
+        -->
+        <service
+            android:name=".service.MonitoringService"
+            android:exported="false"
+            android:foregroundServiceType="health" />
+
+        <!--
+          Bound by Health Services to deliver background heart-rate samples. Must be exported so
+          the platform can start it; it is addressed by explicit component, not by intent filter.
+        -->
+        <service
+            android:name=".data.ZenPulsePassiveListenerService"
+            android:exported="true" />
     </application>
 </manifest>
