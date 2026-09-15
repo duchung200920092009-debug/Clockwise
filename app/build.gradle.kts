@@ -11,8 +11,8 @@ android {
         applicationId = "com.zenpulse.wear"
         minSdk = 30            // Wear OS 3 (required for Health Services)
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1-week1"
+        versionCode = 3
+        versionName = "0.3"
     }
 
     buildTypes {
@@ -42,11 +42,19 @@ android {
 }
 
 dependencies {
-    // Health Services — real-time sensor access (HR, IBI, accelerometer)
+    // Health Services — real-time sensor access plus passive (background) monitoring
     implementation("androidx.health:health-services-client:1.0.0-beta03")
     // ListenableFuture -> coroutine bridge for Health Services async APIs
     implementation("androidx.concurrent:concurrent-futures-ktx:1.2.0")
     implementation("com.google.guava:guava:33.2.1-android")
+
+    // Wearable Data Layer — pushes episode history to the phone companion
+    implementation("com.google.android.gms:play-services-wearable:18.2.0")
+    // Task<T> -> coroutine bridge for the Play services APIs above
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+
+    // Settings and the learned personal baseline, persisted across reboots
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // Kotlin coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
@@ -67,4 +75,9 @@ dependencies {
     // Wear-specific Compose
     implementation("androidx.wear.compose:compose-material:1.3.1")
     implementation("androidx.wear.compose:compose-foundation:1.3.1")
+    implementation("androidx.wear.compose:compose-navigation:1.3.1")
+
+    // The domain layer (baseline, detection, breathing) is pure Kotlin precisely so the logic
+    // that decides whether to alert someone can be tested on a plain JVM.
+    testImplementation("junit:junit:4.13.2")
 }

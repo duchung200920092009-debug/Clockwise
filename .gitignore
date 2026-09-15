@@ -8,3 +8,8 @@
 .externalNativeBuild
 .cxx
 /app/build/
+
+# Python (research scripts)
+__pycache__/
+*.pyc
+.venv/
