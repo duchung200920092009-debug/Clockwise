@@ -15,20 +15,43 @@ Minimal foundation that reads **real-time heart rate** on a real watch:
 - Live BPM screen with sensor-availability status (off-wrist / acquiring / measuring).
 - `BODY_SENSORS` runtime-permission flow and a capability check.
 
+## Week 2 — done
+
+Adds a variability signal, a motion signal, and gets both to disk for offline analysis:
+
+- `AccelerometerManager` — wraps `Sensor.TYPE_ACCELEROMETER` as a cold `Flow<AccelSample>`,
+  same lifecycle pattern as the heart-rate flow. Lets later weeks tell "heart rate is up because
+  you're moving" apart from "heart rate is up at rest".
+- `HrvEstimator` — a rolling RMSSD-style HRV **proxy** derived from consecutive BPM samples.
+  **Important:** Health Services does not expose true beat-to-beat inter-beat intervals (IBI) on
+  most Wear OS hardware, including current Galaxy Watch generations, through its public API —
+  only an already-smoothed BPM. This proxy is a relative, personal-baseline signal for the Week 4
+  detector, not a clinical HRV measurement. See the class doc for the full caveat.
+- `SessionLogger` — merges HR/HRV/accelerometer into a row every 200ms and appends it to a
+  timestamped CSV under app-internal storage (`filesDir/sessions/`). No `INTERNET` permission is
+  declared, so a file never leaves the watch except by an explicit pull (e.g. `adb pull`), ready
+  for the Week 3 NeuroKit2 offline research pass.
+- Screen now shows the HRV proxy, a motion-intensity readout, and a recording indicator while
+  measuring.
+
 ### Architecture
 
 ```
 presentation/
   MainActivity.kt        Permission flow + Compose host
-  HeartRateScreen.kt     Live BPM UI (Wear Compose Material)
-  HeartRateViewModel.kt  UI state; owns the measurement coroutine
+  HeartRateScreen.kt     Live BPM/HRV/motion UI (Wear Compose Material)
+  HeartRateViewModel.kt  UI state; owns the measurement + accel + logging coroutines
 data/
   HealthServicesManager.kt  MeasureClient wrapper -> Flow<HeartRateMessage>
+  AccelerometerManager.kt   SensorManager wrapper -> Flow<AccelSample>
+  SessionLogger.kt          Merged HR/HRV/accel rows -> CSV file (app-internal storage)
+domain/
+  HrvEstimator.kt           BPM -> synthetic IBI -> rolling RMSSD-style proxy
 ```
 
-The sensor callback is registered only while a collector is active (`callbackFlow` + `awaitClose`),
-so no measurement session leaks and the battery isn't drained when nothing is listening — this
-matters because battery is a hard constraint later in the plan.
+Both sensor callbacks are registered only while a collector is active (`callbackFlow` +
+`awaitClose`), so no measurement session leaks and the battery isn't drained when nothing is
+listening — this matters because battery is a hard constraint later in the plan.
 
 ## Build & deploy to a real Galaxy Watch
 
@@ -52,7 +75,6 @@ Requires Wear OS 3+ (API 30+), which every Galaxy Watch 4 and newer runs.
 
 ## Roadmap (from the 7-week plan)
 
-- **Week 2** — add IBI (for HRV) + accelerometer; log to file for offline analysis.
 - **Week 3** — Wearable Data Layer: push watch → phone companion; NeuroKit2 offline research.
 - **Week 4** — personalized baseline + rule-based stress detection ported to Kotlin.
 - **Week 5** — alert back to the watch + guided-breathing intervention.

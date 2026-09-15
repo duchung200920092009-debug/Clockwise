@@ -11,8 +11,8 @@ android {
         applicationId = "com.zenpulse.wear"
         minSdk = 30            // Wear OS 3 (required for Health Services)
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1-week1"
+        versionCode = 2
+        versionName = "0.2-week2"
     }
 
     buildTypes {

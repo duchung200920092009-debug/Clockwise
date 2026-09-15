@@ -21,8 +21,9 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 
 /**
- * The single Week 1 screen: shows the live BPM, sensor status, and a start/stop button.
- * Deliberately minimal — the goal this week is a trustworthy real-time HR readout on the watch.
+ * The single screen: live BPM, sensor status, HRV proxy, motion, a recording indicator while
+ * logging, and a start/stop button. Deliberately minimal — the goal is a trustworthy real-time
+ * readout on the watch, not a dashboard.
  */
 @Composable
 fun HeartRateScreen(
@@ -67,6 +68,26 @@ fun HeartRateScreen(
             color = MaterialTheme.colors.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp),
         )
+
+        if (state.measuring) {
+            Text(
+                text = "HRV proxy: ${state.hrvProxyMs?.let { "%.0f ms".format(it) } ?: "…"}",
+                style = MaterialTheme.typography.caption2,
+                color = MaterialTheme.colors.onSurfaceVariant,
+            )
+            Text(
+                text = "Motion: ${state.accelMagnitude?.let { "%.1f m/s²".format(it) } ?: "…"}",
+                style = MaterialTheme.typography.caption2,
+                color = MaterialTheme.colors.onSurfaceVariant,
+            )
+            if (state.loggingFileName != null) {
+                Text(
+                    text = "● Recording",
+                    style = MaterialTheme.typography.caption2,
+                    color = Color(0xFF4CAF50),
+                )
+            }
+        }
 
         Button(
             onClick = onToggleMeasuring,
