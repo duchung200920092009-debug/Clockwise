@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ZenPulse</string>
+
+    <!-- Màn hình nhịp tim. Giọng wellness, gần gũi — tránh thuật ngữ y tế. -->
+    <string name="hr_unit">nhịp/phút</string>
+    <string name="hr_placeholder">—</string>
+
+    <string name="state_connecting">Đang kết nối cảm biến…</string>
+    <string name="state_waiting">Đang lắng nghe nhịp tim…</string>
+    <string name="state_waiting_hint">Đeo đồng hồ khít vào cổ tay nhé</string>
+    <string name="state_live">Đang đo real-time</string>
+
+    <string name="err_connection">Chưa kết nối được cảm biến. Kiểm tra Samsung Health đã cài trên đồng hồ chưa nhé.</string>
+    <string name="err_permission">Cần cho phép quyền cảm biến để đọc nhịp tim.</string>
+    <string name="err_sdk_policy">Ứng dụng chưa được cấp phép đọc cảm biến (chính sách SDK).</string>
+    <string name="err_unsupported">Đồng hồ này chưa hỗ trợ đọc nhịp tim liên tục.</string>
+    <string name="err_unknown">Chưa đọc được tín hiệu. Thử lại nhé.</string>
+    <string name="retry">Thử lại</string>
+
+    <!-- Xin quyền cảm biến. -->
+    <string name="perm_rationale">ZenPulse cần quyền cảm biến cơ thể để đọc nhịp tim của bạn.</string>
+    <string name="perm_grant">Cho phép</string>
+    <string name="perm_denied_hint">Bạn có thể bật quyền trong Cài đặt để tiếp tục.</string>
+    <string name="perm_open_settings">Mở Cài đặt</string>
 </resources>

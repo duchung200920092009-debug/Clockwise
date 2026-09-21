@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Real-time heart rate / IBI / accelerometer via Health Services -->
+    <!--
+      Stage 1 needs exactly one permission: live body-sensor access to read heart rate.
+      Background measurement, wake locks, phone sync, etc. belong to later stages and are
+      intentionally NOT declared yet (keep the permission surface honest).
+    -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <!-- Needed later for passive/background measurement (Week 6). Declared now. -->
-    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -17,11 +18,6 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault"
         tools:targetApi="30">
-
-        <!-- Tells Wear OS this app requires Health Services to be present -->
-        <uses-library
-            android:name="androidx.health.services.client"
-            android:required="false" />
 
         <activity
             android:name=".presentation.MainActivity"

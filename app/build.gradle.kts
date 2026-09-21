@@ -9,10 +9,10 @@ android {
 
     defaultConfig {
         applicationId = "com.zenpulse.wear"
-        minSdk = 30            // Wear OS 3 (required for Health Services)
+        minSdk = 30            // Wear OS 3+; Galaxy Watch 4 and up. Watch 6 = Wear OS 4 (API 34).
         targetSdk = 34
         versionCode = 1
-        versionName = "0.1-week1"
+        versionName = "0.1-stage1"
     }
 
     buildTypes {
@@ -42,13 +42,12 @@ android {
 }
 
 dependencies {
-    // Health Services — real-time sensor access (HR, IBI, accelerometer)
-    implementation("androidx.health:health-services-client:1.0.0-beta03")
-    // ListenableFuture -> coroutine bridge for Health Services async APIs
-    implementation("androidx.concurrent:concurrent-futures-ktx:1.2.0")
-    implementation("com.google.guava:guava:33.2.1-android")
+    // Samsung Health Sensor SDK (the real-time HR / IBI source).
+    // The .aar is NOT on Maven — download it from the Samsung Developer portal and
+    // drop it into app/libs/ (see app/libs/README.md). Any *.aar there is picked up.
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
 
-    // Kotlin coroutines
+    // Kotlin coroutines — we bridge the SDK's callback listeners into a Flow.
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
     // AndroidX core + lifecycle
@@ -61,6 +60,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    // Cung cấp Icons.Filled.Favorite dùng trong màn hình HR.
     implementation("androidx.compose.material:material-icons-core")
     debugImplementation("androidx.compose.ui:ui-tooling")
 

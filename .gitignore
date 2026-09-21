@@ -8,3 +8,8 @@
 .externalNativeBuild
 .cxx
 /app/build/
+
+# Samsung Health Sensor SDK is proprietary — do NOT redistribute.
+# Each developer downloads the .aar from Samsung and drops it into app/libs/
+# (see app/libs/README.md). Keep the folder + README, ignore the binary.
+/app/libs/*.aar
